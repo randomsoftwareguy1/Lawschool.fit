@@ -487,12 +487,12 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
             <Swords className="w-10 h-10 text-amber-500" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-3 uppercase tracking-widest">lawschool.fit Arena</h2>
-          <p className="text-slate-400 mb-8">You need at least two schools in your list to enter the arena. Add more offers in the "My Schools" tab.</p>
+          <p className="text-slate-400 mb-8">You need at least two offers in your list to enter the arena. Add more in the "My Offers" tab.</p>
           <button 
             onClick={() => { sounds.playClick(); setMainTab('editor'); }}
             className="bg-amber-600 text-white px-8 py-3 rounded-none font-black hover:bg-amber-700 transition-all shadow-lg shadow-amber-900/50 uppercase tracking-widest"
           >
-            Recruit Schools
+            Recruit Offers
           </button>
         </div>
       </div>
@@ -737,8 +737,8 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Manage Schools</h2>
-          <p className="text-slate-500 text-sm mt-1">Add new offers or adjust existing data to see real-time ROI updates.</p>
+          <h2 className="text-2xl font-bold text-slate-900">Manage Your Offers</h2>
+          <p className="text-slate-500 text-sm mt-1">Enter your scholarship and cost details to see which offer provides the best long-term value.</p>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
           <select 
@@ -746,7 +746,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
             onChange={handleAddFromDropdown}
             defaultValue=""
           >
-            <option value="" disabled>-- Auto-fill a School --</option>
+            <option value="" disabled>-- Select an Accepted School --</option>
             {initialSchools.map(s => (
               <option key={s.name} value={s.name}>{s.name}</option>
             ))}
@@ -756,7 +756,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
             onMouseEnter={() => sounds.playHover()}
             className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap"
           >
-            <Plus className="w-4 h-4" /> Add Custom
+            <Plus className="w-4 h-4" /> Add Custom Offer
           </button>
         </div>
       </div>
@@ -1147,7 +1147,7 @@ export default function App() {
               <Globe className="w-8 h-8 text-indigo-600" />
               lawschool.fit
             </h1>
-            <p className="text-slate-500 mt-2 text-lg">Evaluate offers, calculate true costs, and find the best value.</p>
+            <p className="text-slate-500 mt-2 text-lg">The final step in your journey: Compare your actual offers, calculate true costs, and find your best fit.</p>
           </div>
           
           <div className="flex flex-wrap bg-slate-200/50 p-1.5 rounded-xl self-start md:self-auto gap-1 w-full md:w-auto">
@@ -1170,7 +1170,7 @@ export default function App() {
               onMouseEnter={() => sounds.playHover()}
               className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'editor' ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
-              <Settings className="w-4 h-4" /> <span className="hidden sm:inline">My Schools</span><span className="sm:hidden">Schools</span>
+              <Settings className="w-4 h-4" /> <span className="hidden sm:inline">My Offers</span><span className="sm:hidden">Offers</span>
             </button>
             <div className="w-full md:w-auto mt-1 md:mt-0">
               <ExportButton data={data} />
@@ -1189,13 +1189,13 @@ export default function App() {
                   <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Plus className="w-10 h-10 text-indigo-500" />
                   </div>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-3">Welcome to lawschool.fit</h2>
-                  <p className="text-slate-500 mb-8">Add your law school offers in the "My Schools" tab to see ROI analysis, cost breakdowns, and debt simulations.</p>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-3">Got your offers? Let's compare them.</h2>
+                  <p className="text-slate-500 mb-8">Add the law schools that accepted you to see a side-by-side ROI analysis, true cost breakdowns, and debt simulations.</p>
                   <button 
                     onClick={() => { sounds.playClick(); setMainTab('editor'); }}
                     className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
                   >
-                    Go to My Schools
+                    Go to My Offers
                   </button>
                 </div>
               </div>
