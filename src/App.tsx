@@ -376,7 +376,7 @@ function ScholarshipSimulator({ data }: { data: CalculatedSchool[] }) {
         </div>
 
         <div className="lg:col-span-2 space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Risk of Loss</div>
               <div className="text-2xl font-black text-rose-600">{(condRate * 100).toFixed(1)}%</div>
@@ -480,7 +480,7 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
 
   if (data.length < 2) {
     return (
-      <div className="bg-slate-900 rounded-3xl p-12 text-center border-2 border-dashed border-slate-700 shadow-xl relative overflow-hidden">
+      <div className="bg-slate-900 rounded-3xl p-6 md:p-12 text-center border-2 border-dashed border-slate-700 shadow-xl relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-rose-500/10 opacity-50" />
         <div className="relative z-10 max-w-md mx-auto">
           <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-slate-700">
@@ -528,9 +528,9 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
 
     return (
       <div className="flex flex-col gap-1 mb-6 group">
-        <div className="flex justify-between text-xs font-black text-slate-400 uppercase tracking-widest px-2">
+        <div className="flex justify-between text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest px-1 sm:px-2">
           <span className={cn("transition-colors", isP1Better ? "text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]" : "")}>{format(val1)}</span>
-          <span className="group-hover:text-white transition-colors">{label}</span>
+          <span className="group-hover:text-white transition-colors text-center px-1">{label}</span>
           <span className={cn("transition-colors", isP2Better ? "text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.8)]" : "")}>{format(val2)}</span>
         </div>
         <div className="flex h-6 bg-slate-950 rounded-sm overflow-hidden relative border-2 border-slate-800 shadow-inner">
@@ -578,16 +578,16 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
         )}
       </AnimatePresence>
 
-      <div className="text-center mb-12 relative z-10">
+      <div className="text-center mb-8 md:mb-12 relative z-10">
         <motion.h2 
           animate={isFighting ? { scale: [1, 1.1, 1], rotate: [0, -2, 2, 0] } : {}}
           transition={{ duration: 0.3, repeat: isFighting ? Infinity : 0 }}
-          className="text-6xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]"
+          className="text-4xl md:text-6xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]"
           style={{ WebkitTextStroke: '2px #78350f' }}
         >
           MORTAL KOMBAT
         </motion.h2>
-        <p className="text-slate-400 mt-2 font-bold tracking-widest uppercase text-sm">Choose Your Destiny</p>
+        <p className="text-slate-400 mt-2 font-bold tracking-widest uppercase text-xs md:text-sm">Choose Your Destiny</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
@@ -610,7 +610,7 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
               key={p1.composite}
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="text-7xl font-black text-indigo-400 drop-shadow-[0_0_15px_rgba(99,102,241,0.8)]"
+              className="text-5xl md:text-7xl font-black text-indigo-400 drop-shadow-[0_0_15px_rgba(99,102,241,0.8)]"
             >
               {formatDecimal(p1.composite)}
             </motion.div>
@@ -623,9 +623,9 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
           <motion.div 
             animate={isFighting ? { scale: [1, 1.5, 1], rotate: [0, 180, 360] } : {}}
             transition={{ duration: 0.5 }}
-            className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full flex items-center justify-center border-4 border-white shadow-[0_0_50px_rgba(245,158,11,0.8)]"
+            className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full flex items-center justify-center border-4 border-white shadow-[0_0_50px_rgba(245,158,11,0.8)]"
           >
-            <span className="text-4xl font-black italic text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">VS</span>
+            <span className="text-2xl md:text-4xl font-black italic text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">VS</span>
           </motion.div>
         </div>
 
@@ -649,7 +649,7 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
               key={p2.composite}
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="text-7xl font-black text-rose-400 drop-shadow-[0_0_15px_rgba(225,29,72,0.8)]"
+              className="text-5xl md:text-7xl font-black text-rose-400 drop-shadow-[0_0_15px_rgba(225,29,72,0.8)]"
             >
               {formatDecimal(p2.composite)}
             </motion.div>
@@ -659,7 +659,7 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
       </div>
 
       {/* Stats Comparison */}
-      <div className="mt-12 max-w-3xl mx-auto relative z-10 bg-slate-950/80 p-8 rounded-none border-2 border-slate-700 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]">
+      <div className="mt-12 max-w-3xl mx-auto relative z-10 bg-slate-950/80 p-4 sm:p-8 rounded-none border-2 border-slate-700 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]">
         <StatCompare label="Financial Ruin (3Yr COA)" val1={p1.totalCOA} val2={p2.totalCOA} invert format={formatCurrency} />
         <StatCompare label="Prestige Level (Rank)" val1={p1.rank} val2={p2.rank} invert format={(v: number) => `#${v}`} />
         <StatCompare label="Sellout Potential (BigLaw %)" val1={p1.biglaw} val2={p2.biglaw} format={(v: number) => `${v}%`} />
@@ -675,11 +675,11 @@ function VersusMode({ data, setMainTab }: { data: CalculatedSchool[], setMainTab
           transition={{ type: "spring", damping: 12, stiffness: 100 }}
           className="mt-12 text-center relative z-20"
         >
-          <div className="inline-block bg-gradient-to-b from-yellow-300 to-yellow-600 px-12 py-6 rounded-none border-4 border-white shadow-[0_0_60px_rgba(234,179,8,0.6)] transform -skew-x-12">
-            <div className="text-5xl font-black italic text-slate-900 drop-shadow-[0_2px_0_rgba(255,255,255,0.5)] uppercase tracking-tighter">
+          <div className="inline-block bg-gradient-to-b from-yellow-300 to-yellow-600 px-6 py-4 md:px-12 md:py-6 rounded-none border-4 border-white shadow-[0_0_60px_rgba(234,179,8,0.6)] transform -skew-x-12">
+            <div className="text-3xl md:text-5xl font-black italic text-slate-900 drop-shadow-[0_2px_0_rgba(255,255,255,0.5)] uppercase tracking-tighter">
               {winner.name} WINS
             </div>
-            <div className="text-sm font-bold text-red-900 mt-2 tracking-widest uppercase">
+            <div className="text-xs md:text-sm font-bold text-red-900 mt-2 tracking-widest uppercase">
               {getRoast()}
             </div>
           </div>
@@ -786,7 +786,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                 />
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">US News Rank</label>
                   <input 
@@ -807,7 +807,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Gross Tuition Y1</label>
                   <input 
@@ -838,7 +838,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Cond. Type</label>
                   <select 
@@ -874,7 +874,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                   animate={{ opacity: 1, height: 'auto' }}
                   className="space-y-4 pt-4 border-t border-slate-100"
                 >
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">BigLaw %</label>
                       <input 
@@ -895,7 +895,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Bar Pass %</label>
                       <input 
@@ -916,7 +916,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Borrow Rate (%)</label>
                       <input 
@@ -1021,13 +1021,13 @@ function ExportButton({ data }: { data: CalculatedSchool[] }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full md:w-auto">
       <button
         onClick={handleExport}
         onMouseEnter={() => sounds.playHover()}
         disabled={data.length === 0}
         className={cn(
-          "px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed",
+          "w-full md:w-auto justify-center px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed",
           !canDetect && "pr-2"
         )}
       >
@@ -1138,7 +1138,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         
         {/* Main Header & Navigation */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
@@ -1150,29 +1150,31 @@ export default function App() {
             <p className="text-slate-500 mt-2 text-lg">Evaluate offers, calculate true costs, and find the best value.</p>
           </div>
           
-          <div className="flex flex-wrap bg-slate-200/50 p-1.5 rounded-xl self-start md:self-auto gap-1">
+          <div className="flex flex-wrap bg-slate-200/50 p-1.5 rounded-xl self-start md:self-auto gap-1 w-full md:w-auto">
             <button
               onClick={() => { sounds.playClick(); setMainTab('dashboard'); }}
               onMouseEnter={() => sounds.playHover()}
-              className={cn("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", mainTab === 'dashboard' ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
+              className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'dashboard' ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
-              <TrendingUp className="w-4 h-4" /> Dashboard
+              <TrendingUp className="w-4 h-4" /> <span className="hidden sm:inline">Dashboard</span><span className="sm:hidden">Dash</span>
             </button>
             <button
               onClick={() => { sounds.playClick(); setMainTab('versus'); }}
               onMouseEnter={() => sounds.playHover()}
-              className={cn("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", mainTab === 'versus' ? "bg-white text-rose-600 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
+              className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'versus' ? "bg-white text-rose-600 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
               <Swords className="w-4 h-4" /> Versus
             </button>
             <button
               onClick={() => { sounds.playClick(); setMainTab('editor'); }}
               onMouseEnter={() => sounds.playHover()}
-              className={cn("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", mainTab === 'editor' ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
+              className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'editor' ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
-              <Settings className="w-4 h-4" /> My Schools
+              <Settings className="w-4 h-4" /> <span className="hidden sm:inline">My Schools</span><span className="sm:hidden">Schools</span>
             </button>
-            <ExportButton data={data} />
+            <div className="w-full md:w-auto mt-1 md:mt-0">
+              <ExportButton data={data} />
+            </div>
           </div>
         </header>
 
@@ -1182,7 +1184,7 @@ export default function App() {
         {mainTab === 'dashboard' && (
           <div className="space-y-8">
             {data.length === 0 ? (
-              <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200 shadow-sm">
+              <div className="bg-white rounded-3xl p-6 md:p-12 text-center border-2 border-dashed border-slate-200 shadow-sm">
                 <div className="max-w-md mx-auto">
                   <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Plus className="w-10 h-10 text-indigo-500" />
@@ -1200,14 +1202,14 @@ export default function App() {
             ) : (
               <>
                 {/* Sub-Tabs for Dashboard */}
-            <div className="flex bg-slate-100 p-1 rounded-xl shadow-inner inline-flex flex-wrap gap-1">
+            <div className="flex bg-slate-100 p-1 rounded-xl shadow-inner flex-wrap gap-1">
               {(['cost', 'roi', 'outcomes', 'simulator', 'payoff'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => { sounds.playClick(); setDashTab(tab); }}
                   onMouseEnter={() => sounds.playHover()}
                   className={cn(
-                    "relative px-6 py-2.5 text-sm font-semibold rounded-lg transition-colors outline-none",
+                    "relative flex-1 sm:flex-none justify-center px-3 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-lg transition-colors outline-none",
                     dashTab === tab ? "text-indigo-700" : "text-slate-500 hover:text-slate-700"
                   )}
                 >
@@ -1268,7 +1270,7 @@ export default function App() {
                 >
                   {/* Cost Metric Cards */}
                   {costRanked.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                       {[
                         { label: "Lowest Expected COA", value: formatCurrency(costRanked[0].expectedTotalCOA), sub: costRanked[0].name, color: "text-emerald-600" },
                         { label: "Median Expected COA", value: formatCurrency(costRanked[Math.floor(costRanked.length / 2)].expectedTotalCOA), sub: "Across all offers", color: "text-slate-900" },
@@ -1428,7 +1430,7 @@ export default function App() {
                   className="space-y-8"
                 >
                   {/* ROI Metric Cards */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {[
                       { label: "Outcomes", weight: "35%", desc: "BigLaw %, Rank, LSAT", icon: Award, color: "text-indigo-600" },
                       { label: "Cost Score", weight: "25%", desc: "Inverse of total cost", icon: DollarSign, color: "text-emerald-600" },
@@ -1464,7 +1466,7 @@ export default function App() {
                       <select
                         value={scatterView}
                         onChange={(e) => { sounds.playClick(); setScatterView(e.target.value as keyof typeof SCATTER_VIEWS); }}
-                        className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none cursor-pointer"
+                        className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 outline-none cursor-pointer w-full sm:w-auto"
                       >
                         <option value="cost_vs_outcomes">Total COA vs. Outcomes</option>
                         <option value="cost_vs_composite">Total COA vs. Composite Score</option>
