@@ -1090,14 +1090,14 @@ function RegionalFitBadge({ score }: { score: number }) {
   if (score < 6) return null;
   
   let label = "Good Fit";
-  let color = "bg-blue-50 text-blue-700 border-blue-200";
+  let color = "bg-blue-100 text-blue-800 border-blue-200";
   
   if (score >= 9) {
     label = "Perfect Fit";
-    color = "bg-indigo-100 text-indigo-700 border-indigo-200";
+    color = "bg-emerald-600 text-white border-emerald-700";
   } else if (score >= 8) {
     label = "Strong Fit";
-    color = "bg-blue-100 text-blue-700 border-blue-200";
+    color = "bg-emerald-100 text-emerald-800 border-emerald-200";
   }
   
   return (
