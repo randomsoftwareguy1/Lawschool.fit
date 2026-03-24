@@ -25,7 +25,8 @@ import {
   ArrowRightLeft,
   Globe,
   ChevronDown,
-  Github
+  Github,
+  MapPin
 } from 'lucide-react';
 import {
   ScatterChart,
@@ -229,7 +230,7 @@ function DebtPayoffSimulator({ data }: { data: CalculatedSchool[] }) {
                     : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
                 )}
               >
-                {school.name}
+                <SchoolName school={school} />
               </button>
             );
           })}
@@ -705,7 +706,9 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
       rank: 100,
       lsat: 160,
       biglaw: 10,
-      livingCostYearly: 20000
+      livingCostYearly: 20000,
+      region: 'National',
+      state: ''
     }, ...schools]);
   };
 
@@ -786,7 +789,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                 />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">US News Rank</label>
                   <input 
@@ -818,6 +821,17 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                     <option value="Midwest">Midwest</option>
                     <option value="West">West</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">State (2-Letter)</label>
+                  <input 
+                    type="text" 
+                    maxLength={2}
+                    value={school.state || ''} 
+                    onChange={e => handleUpdate(i, 'state', e.target.value.toUpperCase())}
+                    placeholder="TX"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
                 </div>
               </div>
 
@@ -1070,12 +1084,58 @@ function ExportButton({ data }: { data: CalculatedSchool[] }) {
   );
 }
 
+const ALL_STATES = Array.from(new Set(initialSchools.map(s => s.state).filter(Boolean))).sort() as string[];
+
+function RegionalFitBadge({ score }: { score: number }) {
+  if (score < 6) return null;
+  
+  let label = "Good Fit";
+  let color = "bg-blue-50 text-blue-700 border-blue-200";
+  
+  if (score >= 9) {
+    label = "Perfect Fit";
+    color = "bg-indigo-100 text-indigo-700 border-indigo-200";
+  } else if (score >= 8) {
+    label = "Strong Fit";
+    color = "bg-blue-100 text-blue-700 border-blue-200";
+  }
+  
+  return (
+    <span className={cn("shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border", color)}>
+      {label}
+    </span>
+  );
+}
+
+function SchoolName({ school }: { school: { name: string; state?: string; regionalFit?: number } }) {
+  const isProvisional = school.name.toLowerCase().includes('provisional');
+  const displayName = school.name.replace(/\(Provisional\)/i, '').trim();
+  
+  return (
+    <div className="flex items-center gap-2 overflow-hidden">
+      <span className="truncate" title={displayName}>{displayName}</span>
+      {school.state && (
+        <span className="shrink-0 bg-slate-100 text-slate-500 px-1 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-slate-200">
+          {school.state}
+        </span>
+      )}
+      {isProvisional && (
+        <span className="shrink-0 bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-amber-200">
+          Provisional
+        </span>
+      )}
+      {school.regionalFit !== undefined && <RegionalFitBadge score={school.regionalFit} />}
+    </div>
+  );
+}
+
 export default function App() {
   const [rawSchools, setRawSchools] = useState<SchoolData[]>([]);
   const [decisionMode, setDecisionMode] = useState<DecisionMode>('balanced');
   const [targetRegion, setTargetRegion] = useState<Region | 'Any'>('Any');
+  const [targetState, setTargetState] = useState<string | 'Any'>('Any');
   const [isDeadset, setIsDeadset] = useState<boolean>(false);
-  const data = useMemo(() => calculateData(rawSchools, decisionMode, { targetRegion, isDeadset }), [rawSchools, decisionMode, targetRegion, isDeadset]);
+  const data = useMemo(() => calculateData(rawSchools, decisionMode, { targetRegion, targetState, isDeadset }), [rawSchools, decisionMode, targetRegion, targetState, isDeadset]);
   
   const [mainTab, setMainTab] = useState<'dashboard' | 'versus' | 'editor'>('dashboard');
   const [dashTab, setDashTab] = useState<'cost' | 'roi' | 'outcomes' | 'simulator' | 'payoff'>('cost');
@@ -1284,28 +1344,45 @@ export default function App() {
                     onChange={(e) => { sounds.playClick(); setTargetRegion(e.target.value as any); }}
                     className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
-                    <option value="Any">Anywhere / National</option>
+                    <option value="Any">Any Region</option>
                     <option value="Northeast">Northeast</option>
                     <option value="South">South</option>
                     <option value="Midwest">Midwest</option>
                     <option value="West">West</option>
                   </select>
-                  
-                  {targetRegion !== 'Any' && (
-                    <label className="flex items-center gap-2 cursor-pointer ml-2 group">
-                      <div 
-                        className={cn(
-                          "w-5 h-5 rounded border flex items-center justify-center transition-all",
-                          isDeadset ? "bg-emerald-500 border-emerald-600" : "bg-white border-slate-300 group-hover:border-emerald-400"
-                        )}
-                        onClick={() => { sounds.playSuccess(); setIsDeadset(!isDeadset); }}
-                      >
-                        {isDeadset && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                      </div>
-                      <span className="text-xs font-bold text-slate-600">Deadset on this region?</span>
-                    </label>
-                  )}
                 </div>
+
+                <div className="h-8 w-px bg-slate-200 hidden md:block mx-2" />
+
+                <div className="flex items-center gap-2 text-slate-700 font-bold">
+                  <MapPin className="w-5 h-5 text-indigo-500" />
+                  Target State:
+                </div>
+                <div className="flex gap-2 items-center">
+                  <select
+                    value={targetState}
+                    onChange={(e) => { sounds.playClick(); setTargetState(e.target.value); }}
+                    className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="Any">Any State</option>
+                    {ALL_STATES.map(st => <option key={st} value={st}>{st}</option>)}
+                  </select>
+                </div>
+
+                {(targetRegion !== 'Any' || targetState !== 'Any') && (
+                  <label className="flex items-center gap-2 cursor-pointer ml-2 group">
+                    <div 
+                      className={cn(
+                        "w-5 h-5 rounded border flex items-center justify-center transition-all",
+                        isDeadset ? "bg-emerald-500 border-emerald-600" : "bg-white border-slate-300 group-hover:border-emerald-400"
+                      )}
+                      onClick={() => { sounds.playSuccess(); setIsDeadset(!isDeadset); }}
+                    >
+                      {isDeadset && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+                    </div>
+                    <span className="text-xs font-bold text-slate-600">Deadset on this?</span>
+                  </label>
+                )}
               </div>
             )}
 
@@ -1393,10 +1470,12 @@ export default function App() {
                                     {rank}
                                   </span>
                                 </td>
-                                <td className="px-6 py-4 font-semibold text-slate-900 flex items-center gap-2">
-                                  {school.name}
-                                  {school.crossedOff && <XCircle className="w-4 h-4 text-slate-400" />}
-                                  {school.attending && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                <td className="px-6 py-4 font-semibold text-slate-900">
+                                  <div className="flex items-center gap-2">
+                                    <SchoolName school={school} />
+                                    {school.crossedOff && <XCircle className="w-4 h-4 text-slate-400" />}
+                                    {school.attending && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                  </div>
                                 </td>
                                 <td className="px-6 py-4">
                                   <div className="flex flex-wrap gap-2 items-center">
@@ -1446,8 +1525,8 @@ export default function App() {
                         const barColor = getCostBarColor(school.expectedTotalCOA, school.condType);
                         return (
                           <div key={school.name} className="flex items-center text-sm group">
-                            <div className="w-48 truncate pr-4 text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
-                              {school.name}
+                            <div className="w-48 pr-4 text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
+                              <SchoolName school={school} />
                             </div>
                             <div className="flex-1 h-8 bg-slate-100 rounded-lg overflow-hidden relative">
                               <motion.div
@@ -1485,7 +1564,7 @@ export default function App() {
                     {[
                       { label: "Outcomes", weight: "35%", desc: "BigLaw %, Rank, LSAT", icon: Award, color: "text-indigo-600" },
                       { label: "Cost Score", weight: "25%", desc: "Inverse of total cost", icon: DollarSign, color: "text-emerald-600" },
-                      { label: "Value", weight: "25%", desc: "Outcomes per $100k", icon: TrendingUp, color: "text-amber-600" },
+                      { label: "Regional Fit", weight: "Boost", desc: "Based on target state", icon: MapPin, color: "text-blue-600" },
                       { label: "Risk & Stability", weight: "15%", desc: "Penalty for conditionals", icon: ShieldAlert, color: "text-rose-600" },
                     ].map((stat, i) => {
                       const Icon = stat.icon;
@@ -1589,6 +1668,9 @@ export default function App() {
                             <th className="px-6 py-4 text-center cursor-pointer hover:text-slate-800 transition-colors" onMouseEnter={() => sounds.playHover()} onClick={() => handleSort('ceilingScore', roiSort, setRoiSort)}>
                               <div className="flex items-center justify-center gap-1">Ceiling <ArrowUpDown className="w-3 h-3" /></div>
                             </th>
+                            <th className="px-6 py-4 text-center cursor-pointer hover:text-slate-800 transition-colors" onMouseEnter={() => sounds.playHover()} onClick={() => handleSort('regionalFit', roiSort, setRoiSort)}>
+                              <div className="flex items-center justify-center gap-1">Regional Fit <ArrowUpDown className="w-3 h-3" /></div>
+                            </th>
                             <th className="px-6 py-4 text-right cursor-pointer hover:text-slate-800 transition-colors" onMouseEnter={() => sounds.playHover()} onClick={() => handleSort('composite', roiSort, setRoiSort)}>
                               <div className="flex items-center justify-end gap-1">Composite <ArrowUpDown className="w-3 h-3" /></div>
                             </th>
@@ -1616,15 +1698,18 @@ export default function App() {
                                     {rank}
                                   </span>
                                 </td>
-                                <td className="px-6 py-4 font-semibold text-slate-900 flex items-center gap-2">
-                                  {school.name}
-                                  {school.crossedOff && <XCircle className="w-4 h-4 text-slate-400" />}
+                                <td className="px-6 py-4 font-semibold text-slate-900">
+                                  <div className="flex items-center gap-2">
+                                    <SchoolName school={school} />
+                                    {school.crossedOff && <XCircle className="w-4 h-4 text-slate-400" />}
+                                  </div>
                                 </td>
                                 <td className="px-6 py-4 text-center"><ScorePill score={school.prestige} /></td>
                                 <td className="px-6 py-4 text-center"><ScorePill score={school.costEff} /></td>
                                 <td className="px-6 py-4 text-center"><ScorePill score={school.steal} /></td>
                                 <td className="px-6 py-4 text-center"><ScorePill score={school.floorScore} /></td>
                                 <td className="px-6 py-4 text-center"><ScorePill score={school.ceilingScore} /></td>
+                                <td className="px-6 py-4 text-center"><ScorePill score={school.regionalFit} /></td>
                                 <td className="px-6 py-4 text-center">
                                   <ScorePill score={school.riskScore} />
                                   {isConditional && (
@@ -1661,8 +1746,8 @@ export default function App() {
                         const barColor = getScoreBg(school.composite);
                         return (
                           <div key={school.name} className="flex items-center text-sm group">
-                            <div className="w-48 truncate pr-4 text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
-                              {school.name}
+                            <div className="w-48 pr-4 text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
+                              <SchoolName school={school} />
                             </div>
                             <div className="flex-1 h-8 bg-slate-100 rounded-lg overflow-hidden relative">
                               <motion.div
@@ -1726,7 +1811,9 @@ export default function App() {
                               key={school.name}
                               className="hover:bg-slate-50/80 transition-colors"
                             >
-                              <td className="px-6 py-4 font-semibold text-slate-900">{school.name}</td>
+                              <td className="px-6 py-4 font-semibold text-slate-900">
+                                <SchoolName school={school} />
+                              </td>
                               <td className="px-6 py-4 text-center">
                                 <span className="text-emerald-600 font-bold">{school.pBigLawTop10.toFixed(1)}%</span>
                               </td>

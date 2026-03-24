@@ -36,6 +36,7 @@ export interface SchoolData {
 
 export interface UserPreferences {
   targetRegion?: Region | 'Any';
+  targetState?: string | 'Any';
   isDeadset: boolean;
 }
 
@@ -65,13 +66,13 @@ export const initialSchools: SchoolData[] = [
   {"name":"Washington University in St. Louis","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":175,"biglaw":39,"fc":7,"livingCostYearly":20000,"region":"Midwest","state":"MO"},
   {"name":"Georgetown University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":171,"biglaw":55,"fc":4,"livingCostYearly":28000,"region":"National","state":"DC"},
   {"name":"Vanderbilt University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":170,"biglaw":48,"fc":8,"livingCostYearly":20000,"region":"South","state":"TN"},
-  {"name":"University of Texas at Austin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":172,"biglaw":42,"fc":6,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"University of Texas at Austin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":172,"biglaw":42,"fc":6,"livingCostYearly":20000,"region":"South","state":"TX","regionalPlacement":9.5},
   {"name":"University of North Carolina","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":168,"biglaw":25,"fc":5,"livingCostYearly":20000,"region":"South","state":"NC"},
   {"name":"Cornell University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":173,"biglaw":72,"fc":3,"livingCostYearly":28000,"region":"National","state":"NY"},
   {"name":"University of Notre Dame","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":170,"biglaw":40,"fc":12,"livingCostYearly":20000,"region":"Midwest","state":"IN"},
   {"name":"University of Minnesota","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":171,"biglaw":16,"livingCostYearly":20000,"region":"Midwest","state":"MN"},
   {"name":"University of Georgia","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":17,"livingCostYearly":20000,"region":"South","state":"GA"},
-  {"name":"Texas A&M University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":19,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"Texas A&M University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":19,"livingCostYearly":20000,"region":"South","state":"TX","regionalPlacement":8.5},
   {"name":"Boston University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":170,"biglaw":36,"livingCostYearly":28000,"region":"Northeast","state":"MA"},
   {"name":"Boston College","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":25,"lsat":168,"biglaw":44,"livingCostYearly":20000,"region":"Northeast","state":"MA"},
   {"name":"Wake Forest University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":26,"lsat":166,"biglaw":25,"livingCostYearly":20000,"region":"South","state":"NC"},
@@ -91,8 +92,8 @@ export const initialSchools: SchoolData[] = [
   {"name":"Fordham University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":168,"biglaw":42,"livingCostYearly":28000,"region":"Northeast","state":"NY"},
   {"name":"University of California—Irvine","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":169,"biglaw":29,"livingCostYearly":28000,"region":"West","state":"CA"},
   {"name":"Emory University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":166,"biglaw":34,"livingCostYearly":20000,"region":"South","state":"GA"},
-  {"name":"Baylor University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":164,"biglaw":7,"livingCostYearly":20000,"region":"South","state":"TX"},
-  {"name":"Southern Methodist University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":167,"biglaw":28,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"Baylor University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":164,"biglaw":7,"livingCostYearly":20000,"region":"South","state":"TX","regionalPlacement":9.0},
+  {"name":"Southern Methodist University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":167,"biglaw":28,"livingCostYearly":20000,"region":"South","state":"TX","regionalPlacement":8.8},
   {"name":"Arizona State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":45,"lsat":165,"biglaw":11,"livingCostYearly":20000,"region":"West","state":"AZ"},
   {"name":"University of Colorado—Boulder","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":18,"livingCostYearly":20000,"region":"West","state":"CO"},
   {"name":"Indiana University - Bloomington","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":17,"livingCostYearly":20000,"region":"Midwest","state":"IN"},
@@ -112,7 +113,7 @@ export const initialSchools: SchoolData[] = [
   {"name":"Pennsylvania State - Dickinson Law","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":59,"lsat":159,"biglaw":8,"livingCostYearly":20000},
   {"name":"Marquette University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":59,"lsat":158,"biglaw":6,"livingCostYearly":20000},
   {"name":"Yeshiva University (Cardozo)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":165,"biglaw":19,"livingCostYearly":28000},
-  {"name":"University of Houston","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":163,"biglaw":22,"livingCostYearly":20000},
+  {"name":"University of Houston","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":163,"biglaw":22,"livingCostYearly":20000,"region":"South","state":"TX","regionalPlacement":8.2},
   {"name":"University of South Carolina","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":162,"biglaw":8,"livingCostYearly":20000},
   {"name":"University of Maryland","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":164,"biglaw":10,"livingCostYearly":20000},
   {"name":"St. John's University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":63,"lsat":164,"biglaw":16,"livingCostYearly":28000},
@@ -272,6 +273,7 @@ export interface CalculatedSchool extends SchoolData {
   riskScore: number;
   floorScore: number;
   ceilingScore: number;
+  regionalFit: number;
   stability: number;
   composite: number;
 }
@@ -425,8 +427,8 @@ export function calculateData(
   return calculated.map((school, i) => {
     const { outcomes, rankScore } = rawValues[i];
     
-    const costScore = ((maxExpected - school.expectedTotalCOA) / (maxExpected - minExpected)) * 10;
-    const valueScore = ((rawValues[i].rawValue - minRawValue) / (maxRawValue - minRawValue)) * 10;
+    const costScore = (maxExpected - minExpected) !== 0 ? ((maxExpected - school.expectedTotalCOA) / (maxExpected - minExpected)) * 10 : 5;
+    const valueScore = (maxRawValue - minRawValue) !== 0 ? ((rawValues[i].rawValue - minRawValue) / (maxRawValue - minRawValue)) * 10 : 5;
 
     let riskScore = 10;
     if (school.guarantee) {
@@ -449,14 +451,54 @@ export function calculateData(
     const top10Norm = school.pBigLawTop10 / 100 * 10;
     const ceilingScore = Math.max(0, Math.min(10, 0.5 * top10Norm + 0.3 * upsideCostScore + 0.2 * rankScore));
 
+    // Regional Fit Score calculation (0-10)
+    let regionalFit = 5; // Neutral
+    if (prefs.targetState && prefs.targetState !== 'Any') {
+      if (school.state === prefs.targetState) {
+        regionalFit = 8.5 + ((school.regionalPlacement || 7) / 10) * 1.5; // High fit
+      } else if (school.region === 'National') {
+        regionalFit = 7.5; // Good fit
+      } else if (school.region === prefs.targetRegion) {
+        regionalFit = 6; // Moderate fit
+      } else {
+        regionalFit = 3; // Poor fit
+      }
+    } else if (prefs.targetRegion && prefs.targetRegion !== 'Any') {
+      if (school.region === prefs.targetRegion) {
+        regionalFit = 8 + ((school.regionalPlacement || 7) / 10) * 2;
+      } else if (school.region === 'National') {
+        regionalFit = 7;
+      } else {
+        regionalFit = 4;
+      }
+    }
+
     // Regional Credence Logic
     let regionalBoost = 1.0;
-    if (prefs.targetRegion !== 'Any' && school.region === prefs.targetRegion) {
-      regionalBoost = prefs.isDeadset ? 1.4 : 1.15;
-    } else if (prefs.targetRegion !== 'Any' && school.region === 'National') {
-      regionalBoost = prefs.isDeadset ? 1.1 : 1.25;
-    } else if (prefs.targetRegion !== 'Any' && school.region !== prefs.targetRegion) {
-      regionalBoost = prefs.isDeadset ? 0.6 : 0.9;
+    
+    // Region-based boost
+    if (prefs.targetRegion && prefs.targetRegion !== 'Any') {
+      if (school.region === prefs.targetRegion) {
+        regionalBoost *= prefs.isDeadset ? 1.4 : 1.15;
+      } else if (school.region === 'National') {
+        regionalBoost *= prefs.isDeadset ? 1.1 : 1.25;
+      } else {
+        regionalBoost *= prefs.isDeadset ? 0.6 : 0.9;
+      }
+    }
+
+    // State-based boost (more specific)
+    if (prefs.targetState && prefs.targetState !== 'Any') {
+      if (school.state === prefs.targetState) {
+        const placementFactor = (school.regionalPlacement || 7) / 7;
+        regionalBoost *= prefs.isDeadset ? (1.5 * placementFactor) : (1.25 * placementFactor);
+      } else if (school.region !== 'National') {
+        // Penalty for non-national schools in the wrong state
+        regionalBoost *= prefs.isDeadset ? 0.5 : 0.8;
+      } else {
+        // National schools are slightly less preferred than local but still good
+        regionalBoost *= prefs.isDeadset ? 0.8 : 0.95;
+      }
     }
 
     let composite = 0;
@@ -487,6 +529,7 @@ export function calculateData(
       riskScore,
       floorScore,
       ceilingScore,
+      regionalFit,
       stability: riskScore,
       composite
     };
