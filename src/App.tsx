@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import React, { useState, useMemo, useEffect } from 'react';
 import { calculateData, formatCurrency, formatDecimal, CalculatedSchool, SchoolData, initialSchools, DecisionMode, normalCDF, downloadToExcel, downloadToCSV } from './data';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -1765,6 +1766,7 @@ export default function App() {
             </footer>
           </div>
         )}
+        <Analytics />
       </div>
     </div>
   );
