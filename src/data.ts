@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 
 export type CondType = 'none' | 'soft' | 'hard';
 export type DecisionMode = 'balanced' | 'maximizeUpside' | 'minimizeRisk';
+export type Region = 'Northeast' | 'South' | 'Midwest' | 'West' | 'National';
 
 export interface SchoolData {
   name: string;
@@ -21,6 +22,8 @@ export interface SchoolData {
   fc?: number;
   barPass?: number;
   regionalPlacement?: number;
+  region?: Region;
+  state?: string;
   notes?: string;
   specialMode?: 'duqMode' | 'scholFixed' | 'uicMode';
   crossedOff?: boolean;
@@ -29,6 +32,11 @@ export interface SchoolData {
   livingCostYearly?: number;
   borrowRate?: number;
   originationFee?: number;
+}
+
+export interface UserPreferences {
+  targetRegion?: Region | 'Any';
+  isDeadset: boolean;
 }
 
 export function normalCDF(x: number, mean: number, stdDev: number): number {
@@ -41,60 +49,60 @@ export function normalCDF(x: number, mean: number, stdDev: number): number {
 }
 
 export const initialSchools: SchoolData[] = [
-  {"name":"Stanford University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":1,"lsat":173,"biglaw":40,"livingCostYearly":28000},
-  {"name":"Yale University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":1,"lsat":174,"biglaw":31,"livingCostYearly":20000},
-  {"name":"University of Chicago","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":3,"lsat":174,"biglaw":49,"livingCostYearly":22000},
-  {"name":"University of Virginia","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":4,"lsat":173,"biglaw":60,"livingCostYearly":20000},
-  {"name":"University of Pennsylvania","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":5,"lsat":173,"biglaw":64,"livingCostYearly":22000},
-  {"name":"Harvard University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":6,"lsat":174,"biglaw":51,"livingCostYearly":20000},
-  {"name":"Duke University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":6,"lsat":171,"biglaw":68,"livingCostYearly":20000},
-  {"name":"New York University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":8,"lsat":172,"biglaw":54,"livingCostYearly":28000},
-  {"name":"University of Michigan","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":8,"lsat":171,"biglaw":50,"livingCostYearly":20000},
-  {"name":"Columbia University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":10,"lsat":173,"biglaw":65,"livingCostYearly":28000},
-  {"name":"Northwestern University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":10,"lsat":173,"biglaw":64,"livingCostYearly":20000},
-  {"name":"University of California—Los Angeles","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":12,"lsat":171,"biglaw":51,"livingCostYearly":28000},
-  {"name":"University of California—Berkeley","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":13,"lsat":170,"biglaw":52,"livingCostYearly":28000},
-  {"name":"Washington University in St. Louis","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":175,"biglaw":39,"livingCostYearly":20000},
-  {"name":"Georgetown University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":171,"biglaw":55,"livingCostYearly":28000},
-  {"name":"Vanderbilt University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":170,"biglaw":48,"livingCostYearly":20000},
-  {"name":"University of Texas at Austin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":172,"biglaw":42,"livingCostYearly":20000},
-  {"name":"University of North Carolina","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":168,"biglaw":25,"livingCostYearly":20000},
-  {"name":"Cornell University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":173,"biglaw":72,"livingCostYearly":28000},
-  {"name":"University of Notre Dame","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":170,"biglaw":40,"livingCostYearly":20000},
-  {"name":"University of Minnesota","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":171,"biglaw":16,"livingCostYearly":20000},
-  {"name":"University of Georgia","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":17,"livingCostYearly":20000},
-  {"name":"Texas A&M University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":19,"livingCostYearly":20000},
-  {"name":"Boston University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":170,"biglaw":36,"livingCostYearly":28000},
-  {"name":"Boston College","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":25,"lsat":168,"biglaw":44,"livingCostYearly":20000},
-  {"name":"Wake Forest University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":26,"lsat":166,"biglaw":25,"livingCostYearly":20000},
-  {"name":"University of Southern California","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":26,"lsat":169,"biglaw":57,"livingCostYearly":28000},
-  {"name":"University of Wisconsin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":167,"biglaw":13,"livingCostYearly":20000},
-  {"name":"Ohio State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":168,"biglaw":13,"livingCostYearly":20000},
-  {"name":"Brigham Young University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":170,"biglaw":23,"livingCostYearly":20000},
-  {"name":"George Washington University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":168,"biglaw":30,"livingCostYearly":28000},
-  {"name":"University of Utah","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":166,"biglaw":8,"livingCostYearly":20000},
-  {"name":"University of Alabama","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":167,"biglaw":20,"livingCostYearly":20000},
-  {"name":"William & Mary Law School","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":166,"biglaw":18,"livingCostYearly":20000},
-  {"name":"George Mason University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":169,"biglaw":11,"livingCostYearly":20000},
-  {"name":"Washington and Lee University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":36,"lsat":167,"biglaw":21,"livingCostYearly":20000},
-  {"name":"University of Iowa","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":36,"lsat":164,"biglaw":16,"livingCostYearly":20000},
-  {"name":"Florida State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":166,"biglaw":16,"livingCostYearly":20000},
-  {"name":"University of Florida (Levin)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":169,"biglaw":25,"livingCostYearly":20000},
-  {"name":"Fordham University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":168,"biglaw":42,"livingCostYearly":28000},
-  {"name":"University of California—Irvine","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":169,"biglaw":29,"livingCostYearly":28000},
-  {"name":"Emory University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":166,"biglaw":34,"livingCostYearly":20000},
-  {"name":"Baylor University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":164,"biglaw":7,"livingCostYearly":20000},
-  {"name":"Southern Methodist University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":167,"biglaw":28,"livingCostYearly":20000},
-  {"name":"Arizona State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":45,"lsat":165,"biglaw":11,"livingCostYearly":20000},
-  {"name":"University of Colorado—Boulder","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":18,"livingCostYearly":20000},
-  {"name":"Indiana University - Bloomington","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":17,"livingCostYearly":20000},
-  {"name":"Villanova University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":48,"lsat":164,"biglaw":20,"livingCostYearly":20000},
-  {"name":"University of Illinois—Urbana Champaign","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":48,"lsat":166,"biglaw":34,"livingCostYearly":20000},
-  {"name":"University of Washington","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":16,"livingCostYearly":22000},
-  {"name":"Temple University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":18,"livingCostYearly":22000},
-  {"name":"University of Kansas","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":162,"biglaw":10,"livingCostYearly":20000},
-  {"name":"University of California—Davis","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":26,"livingCostYearly":28000},
-  {"name":"University of Connecticut","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":162,"biglaw":11,"livingCostYearly":20000},
+  {"name":"Stanford University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":1,"lsat":173,"biglaw":40,"fc":28,"livingCostYearly":28000,"region":"National","state":"CA"},
+  {"name":"Yale University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":1,"lsat":174,"biglaw":31,"fc":35,"livingCostYearly":20000,"region":"National","state":"CT"},
+  {"name":"University of Chicago","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":3,"lsat":174,"biglaw":49,"fc":25,"livingCostYearly":22000,"region":"National","state":"IL"},
+  {"name":"University of Virginia","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":4,"lsat":173,"biglaw":60,"fc":15,"livingCostYearly":20000,"region":"National","state":"VA"},
+  {"name":"University of Pennsylvania","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":5,"lsat":173,"biglaw":64,"fc":10,"livingCostYearly":22000,"region":"National","state":"PA"},
+  {"name":"Harvard University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":6,"lsat":174,"biglaw":51,"fc":18,"livingCostYearly":20000,"region":"National","state":"MA"},
+  {"name":"Duke University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":6,"lsat":171,"biglaw":68,"fc":8,"livingCostYearly":20000,"region":"National","state":"NC"},
+  {"name":"New York University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":8,"lsat":172,"biglaw":54,"fc":6,"livingCostYearly":28000,"region":"National","state":"NY"},
+  {"name":"University of Michigan","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":8,"lsat":171,"biglaw":50,"fc":8,"livingCostYearly":20000,"region":"National","state":"MI"},
+  {"name":"Columbia University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":10,"lsat":173,"biglaw":65,"fc":5,"livingCostYearly":28000,"region":"National","state":"NY"},
+  {"name":"Northwestern University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":10,"lsat":173,"biglaw":64,"fc":4,"livingCostYearly":20000,"region":"National","state":"IL"},
+  {"name":"University of California—Los Angeles","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":12,"lsat":171,"biglaw":51,"fc":5,"livingCostYearly":28000,"region":"National","state":"CA"},
+  {"name":"University of California—Berkeley","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":13,"lsat":170,"biglaw":52,"fc":6,"livingCostYearly":28000,"region":"National","state":"CA"},
+  {"name":"Washington University in St. Louis","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":175,"biglaw":39,"fc":7,"livingCostYearly":20000,"region":"Midwest","state":"MO"},
+  {"name":"Georgetown University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":171,"biglaw":55,"fc":4,"livingCostYearly":28000,"region":"National","state":"DC"},
+  {"name":"Vanderbilt University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":170,"biglaw":48,"fc":8,"livingCostYearly":20000,"region":"South","state":"TN"},
+  {"name":"University of Texas at Austin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":14,"lsat":172,"biglaw":42,"fc":6,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"University of North Carolina","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":168,"biglaw":25,"fc":5,"livingCostYearly":20000,"region":"South","state":"NC"},
+  {"name":"Cornell University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":18,"lsat":173,"biglaw":72,"fc":3,"livingCostYearly":28000,"region":"National","state":"NY"},
+  {"name":"University of Notre Dame","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":170,"biglaw":40,"fc":12,"livingCostYearly":20000,"region":"Midwest","state":"IN"},
+  {"name":"University of Minnesota","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":20,"lsat":171,"biglaw":16,"livingCostYearly":20000,"region":"Midwest","state":"MN"},
+  {"name":"University of Georgia","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":17,"livingCostYearly":20000,"region":"South","state":"GA"},
+  {"name":"Texas A&M University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":169,"biglaw":19,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"Boston University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":22,"lsat":170,"biglaw":36,"livingCostYearly":28000,"region":"Northeast","state":"MA"},
+  {"name":"Boston College","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":25,"lsat":168,"biglaw":44,"livingCostYearly":20000,"region":"Northeast","state":"MA"},
+  {"name":"Wake Forest University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":26,"lsat":166,"biglaw":25,"livingCostYearly":20000,"region":"South","state":"NC"},
+  {"name":"University of Southern California","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":26,"lsat":169,"biglaw":57,"livingCostYearly":28000,"region":"West","state":"CA"},
+  {"name":"University of Wisconsin","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":167,"biglaw":13,"livingCostYearly":20000,"region":"Midwest","state":"WI"},
+  {"name":"Ohio State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":168,"biglaw":13,"livingCostYearly":20000,"region":"Midwest","state":"OH"},
+  {"name":"Brigham Young University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":28,"lsat":170,"biglaw":23,"livingCostYearly":20000,"region":"West","state":"UT"},
+  {"name":"George Washington University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":168,"biglaw":30,"livingCostYearly":28000,"region":"South","state":"DC"},
+  {"name":"University of Utah","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":166,"biglaw":8,"livingCostYearly":20000,"region":"West","state":"UT"},
+  {"name":"University of Alabama","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":167,"biglaw":20,"livingCostYearly":20000,"region":"South","state":"AL"},
+  {"name":"William & Mary Law School","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":166,"biglaw":18,"livingCostYearly":20000,"region":"South","state":"VA"},
+  {"name":"George Mason University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":31,"lsat":169,"biglaw":11,"livingCostYearly":20000,"region":"South","state":"VA"},
+  {"name":"Washington and Lee University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":36,"lsat":167,"biglaw":21,"livingCostYearly":20000,"region":"South","state":"VA"},
+  {"name":"University of Iowa","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":36,"lsat":164,"biglaw":16,"livingCostYearly":20000,"region":"Midwest","state":"IA"},
+  {"name":"Florida State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":166,"biglaw":16,"livingCostYearly":20000,"region":"South","state":"FL"},
+  {"name":"University of Florida (Levin)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":169,"biglaw":25,"livingCostYearly":20000,"region":"South","state":"FL"},
+  {"name":"Fordham University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":168,"biglaw":42,"livingCostYearly":28000,"region":"Northeast","state":"NY"},
+  {"name":"University of California—Irvine","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":169,"biglaw":29,"livingCostYearly":28000,"region":"West","state":"CA"},
+  {"name":"Emory University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":38,"lsat":166,"biglaw":34,"livingCostYearly":20000,"region":"South","state":"GA"},
+  {"name":"Baylor University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":164,"biglaw":7,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"Southern Methodist University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":43,"lsat":167,"biglaw":28,"livingCostYearly":20000,"region":"South","state":"TX"},
+  {"name":"Arizona State University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":45,"lsat":165,"biglaw":11,"livingCostYearly":20000,"region":"West","state":"AZ"},
+  {"name":"University of Colorado—Boulder","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":18,"livingCostYearly":20000,"region":"West","state":"CO"},
+  {"name":"Indiana University - Bloomington","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":46,"lsat":164,"biglaw":17,"livingCostYearly":20000,"region":"Midwest","state":"IN"},
+  {"name":"Villanova University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":48,"lsat":164,"biglaw":20,"livingCostYearly":20000,"region":"Northeast","state":"PA"},
+  {"name":"University of Illinois—Urbana Champaign","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":48,"lsat":166,"biglaw":34,"livingCostYearly":20000,"region":"Midwest","state":"IL"},
+  {"name":"University of Washington","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":16,"livingCostYearly":22000,"region":"West","state":"WA"},
+  {"name":"Temple University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":18,"livingCostYearly":22000,"region":"Northeast","state":"PA"},
+  {"name":"University of Kansas","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":162,"biglaw":10,"livingCostYearly":20000,"region":"Midwest","state":"KS"},
+  {"name":"University of California—Davis","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":165,"biglaw":26,"livingCostYearly":28000,"region":"West","state":"CA"},
+  {"name":"University of Connecticut","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":50,"lsat":162,"biglaw":11,"livingCostYearly":20000,"region":"Northeast","state":"CT"},
   {"name":"University of Tennessee","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":55,"lsat":164,"biglaw":10,"livingCostYearly":20000},
   {"name":"Pepperdine University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":55,"lsat":164,"biglaw":12,"livingCostYearly":28000},
   {"name":"University of San Diego","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":57,"lsat":163,"biglaw":13,"livingCostYearly":28000},
@@ -235,7 +243,10 @@ export const initialSchools: SchoolData[] = [
   {"name":"Jones School of Law","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":178,"lsat":150,"biglaw":0,"livingCostYearly":20000},
   {"name":"Western Michigan University (Cooley)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":178,"lsat":147,"biglaw":2,"livingCostYearly":20000},
   {"name":"North Carolina Central University","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":178,"lsat":151,"biglaw":4,"livingCostYearly":20000},
-  {"name":"Western State College Of Law","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":178,"lsat":152,"biglaw":0,"livingCostYearly":28000}
+  {"name":"Western State College Of Law","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":178,"lsat":152,"biglaw":0,"livingCostYearly":28000},
+  {"name":"Jacksonville University College of Law (Provisional)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":180,"lsat":150,"biglaw":0,"livingCostYearly":20000,"region":"South","state":"FL"},
+  {"name":"Wilmington University School of Law (Provisional)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":180,"lsat":150,"biglaw":0,"livingCostYearly":20000,"region":"Northeast","state":"DE"},
+  {"name":"High Point University Kenneth F. Kahn School of Law (Provisional)","grossY1":60000,"scholarship":0,"guarantee":false,"condType":"none","condRate":0,"rank":180,"lsat":150,"biglaw":0,"livingCostYearly":20000,"region":"South","state":"NC"}
 ];
 
 export interface CalculatedSchool extends SchoolData {
@@ -267,7 +278,8 @@ export interface CalculatedSchool extends SchoolData {
 
 export function calculateData(
   schoolsInput: SchoolData[] = initialSchools,
-  mode: DecisionMode = 'balanced'
+  mode: DecisionMode = 'balanced',
+  prefs: UserPreferences = { targetRegion: 'Any', isDeadset: false }
 ): CalculatedSchool[] {
   const calculated = schoolsInput.map((school) => {
     let upsideY1 = 0, upsideY2 = 0, upsideY3 = 0;
@@ -377,27 +389,41 @@ export function calculateData(
   const minUpside = Math.min(...calculated.map((s) => s.upsideCOA));
   const maxUpside = Math.max(...calculated.map((s) => s.upsideCOA));
 
-  const RANK_BEST = Math.min(...calculated.map(s => s.rank));
-  const RANK_WORST = Math.max(...calculated.map(s => s.rank));
   const LSAT_BEST = Math.max(...calculated.map(s => s.lsat));
   const LSAT_WORST = Math.min(...calculated.map(s => s.lsat));
   const BIGLAW_BEST = Math.max(...calculated.map(s => s.biglaw));
   const BIGLAW_WORST = Math.min(...calculated.map(s => s.biglaw));
 
   const rawValues = calculated.map(school => {
-    const rankNorm = ((RANK_WORST - school.rank) / (RANK_WORST - RANK_BEST)) * 10;
+    let rankScore = 0;
+    if (school.rank <= 3) rankScore = 10;
+    else if (school.rank <= 6) rankScore = 9.5;
+    else if (school.rank <= 14) rankScore = 9.0;
+    else if (school.rank <= 20) rankScore = 8.0;
+    else if (school.rank <= 30) rankScore = 7.5;
+    else if (school.rank <= 40) rankScore = 6.5;
+    else if (school.rank <= 50) rankScore = 5.5;
+    else if (school.rank <= 75) rankScore = 4.5;
+    else if (school.rank <= 100) rankScore = 3.5;
+    else rankScore = Math.max(0, 2 - (school.rank / 100));
+
     const lsatNorm = ((school.lsat - LSAT_WORST) / (LSAT_BEST - LSAT_WORST)) * 10;
     const biglawNorm = ((school.biglaw - BIGLAW_WORST) / (BIGLAW_BEST - BIGLAW_WORST)) * 10;
-    const outcomes = 0.5 * biglawNorm + 0.3 * rankNorm + 0.2 * lsatNorm;
-    const rawValue = (outcomes * 10) / (Math.max(school.expectedTotalCOA, 50000) / 100000);
-    return { outcomes, rawValue, rankNorm };
+    
+    const outcomes = 0.6 * biglawNorm + 0.3 * rankScore + 0.1 * lsatNorm;
+    
+    const costFactor = Math.max(school.expectedTotalCOA, 50000) / 100000;
+    const prestigeBonus = school.rank <= 14 ? 1.5 : 1.0;
+    const rawValue = (outcomes * 10 * prestigeBonus) / Math.pow(costFactor, 0.7);
+    
+    return { outcomes, rawValue, rankScore };
   });
 
   const maxRawValue = Math.max(...rawValues.map(v => v.rawValue));
   const minRawValue = Math.min(...rawValues.map(v => v.rawValue));
 
   return calculated.map((school, i) => {
-    const { outcomes, rankNorm } = rawValues[i];
+    const { outcomes, rankScore } = rawValues[i];
     
     const costScore = ((maxExpected - school.expectedTotalCOA) / (maxExpected - minExpected)) * 10;
     const valueScore = ((rawValues[i].rawValue - minRawValue) / (maxRawValue - minRawValue)) * 10;
@@ -421,19 +447,36 @@ export function calculateData(
     const floorScore = Math.max(0, Math.min(10, 0.4 * downsideProtectScore + 0.3 * barPassNorm + 0.3 * regionalNorm));
 
     const top10Norm = school.pBigLawTop10 / 100 * 10;
-    const ceilingScore = Math.max(0, Math.min(10, 0.5 * top10Norm + 0.3 * upsideCostScore + 0.2 * rankNorm));
+    const ceilingScore = Math.max(0, Math.min(10, 0.5 * top10Norm + 0.3 * upsideCostScore + 0.2 * rankScore));
+
+    // Regional Credence Logic
+    let regionalBoost = 1.0;
+    if (prefs.targetRegion !== 'Any' && school.region === prefs.targetRegion) {
+      regionalBoost = prefs.isDeadset ? 1.4 : 1.15;
+    } else if (prefs.targetRegion !== 'Any' && school.region === 'National') {
+      regionalBoost = prefs.isDeadset ? 1.1 : 1.25;
+    } else if (prefs.targetRegion !== 'Any' && school.region !== prefs.targetRegion) {
+      regionalBoost = prefs.isDeadset ? 0.6 : 0.9;
+    }
 
     let composite = 0;
+    const isElite = school.rank <= 14 || school.region === 'National';
+    const outcomeWeight = isElite ? 0.5 : 0.3;
+    const costWeight = isElite ? 0.05 : 0.2;
+    const valueWeight = isElite ? 0.05 : 0.15;
+    const floorWeight = 0.2;
+    const ceilingWeight = isElite ? 0.2 : 0.15;
+
     if (mode === 'maximizeUpside') {
-      composite = 0.4 * ceilingScore + 0.4 * outcomes + 0.2 * valueScore;
+      composite = 0.5 * ceilingScore + 0.4 * outcomes + 0.1 * valueScore;
     } else if (mode === 'minimizeRisk') {
       composite = 0.4 * floorScore + 0.4 * costScore + 0.2 * riskScore;
     } else {
-      composite = 0.25 * outcomes + 0.2 * floorScore + 0.2 * ceilingScore + 0.2 * costScore + 0.15 * valueScore;
+      composite = (outcomeWeight * outcomes + floorWeight * floorScore + ceilingWeight * ceilingScore + costWeight * costScore + valueWeight * valueScore) * regionalBoost;
     }
 
     if (school.withdrawn || school.crossedOff) {
-      composite = composite * 0.1; // Significant penalty for withdrawn or crossed off schools
+      composite = -1;
     }
 
     return {
@@ -445,7 +488,7 @@ export function calculateData(
       floorScore,
       ceilingScore,
       stability: riskScore,
-      composite,
+      composite
     };
   });
 }

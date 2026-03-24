@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import React, { useState, useMemo, useEffect } from 'react';
-import { calculateData, formatCurrency, formatDecimal, CalculatedSchool, SchoolData, initialSchools, DecisionMode, normalCDF, downloadToExcel, downloadToCSV } from './data';
+import { calculateData, formatCurrency, formatDecimal, CalculatedSchool, SchoolData, initialSchools, DecisionMode, normalCDF, downloadToExcel, downloadToCSV, Region } from './data';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   TrendingUp,
@@ -786,7 +786,7 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                 />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">US News Rank</label>
                   <input 
@@ -804,6 +804,20 @@ function DataEditor({ schools, setSchools }: { schools: SchoolData[], setSchools
                     onChange={e => handleUpdate(i, 'lsat', Number(e.target.value))}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Region</label>
+                  <select 
+                    value={school.region || 'National'} 
+                    onChange={e => handleUpdate(i, 'region', e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="National">National</option>
+                    <option value="Northeast">Northeast</option>
+                    <option value="South">South</option>
+                    <option value="Midwest">Midwest</option>
+                    <option value="West">West</option>
+                  </select>
                 </div>
               </div>
 
@@ -1059,7 +1073,9 @@ function ExportButton({ data }: { data: CalculatedSchool[] }) {
 export default function App() {
   const [rawSchools, setRawSchools] = useState<SchoolData[]>([]);
   const [decisionMode, setDecisionMode] = useState<DecisionMode>('balanced');
-  const data = useMemo(() => calculateData(rawSchools, decisionMode), [rawSchools, decisionMode]);
+  const [targetRegion, setTargetRegion] = useState<Region | 'Any'>('Any');
+  const [isDeadset, setIsDeadset] = useState<boolean>(false);
+  const data = useMemo(() => calculateData(rawSchools, decisionMode, { targetRegion, isDeadset }), [rawSchools, decisionMode, targetRegion, isDeadset]);
   
   const [mainTab, setMainTab] = useState<'dashboard' | 'versus' | 'editor'>('dashboard');
   const [dashTab, setDashTab] = useState<'cost' | 'roi' | 'outcomes' | 'simulator' | 'payoff'>('cost');
@@ -1233,7 +1249,7 @@ export default function App() {
             </div>
 
             {dashTab === 'roi' && (
-              <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200/60">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200/60">
                 <div className="flex items-center gap-2 text-slate-700 font-bold">
                   <SlidersHorizontal className="w-5 h-5 text-indigo-500" />
                   Decision Mode:
@@ -1254,6 +1270,41 @@ export default function App() {
                       {mode === 'balanced' ? 'Balanced' : mode === 'maximizeUpside' ? 'Maximize Upside' : 'Minimize Risk'}
                     </button>
                   ))}
+                </div>
+
+                <div className="h-8 w-px bg-slate-200 hidden md:block mx-2" />
+
+                <div className="flex items-center gap-2 text-slate-700 font-bold">
+                  <Globe className="w-5 h-5 text-emerald-500" />
+                  Target Region:
+                </div>
+                <div className="flex gap-2 items-center">
+                  <select
+                    value={targetRegion}
+                    onChange={(e) => { sounds.playClick(); setTargetRegion(e.target.value as any); }}
+                    className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="Any">Anywhere / National</option>
+                    <option value="Northeast">Northeast</option>
+                    <option value="South">South</option>
+                    <option value="Midwest">Midwest</option>
+                    <option value="West">West</option>
+                  </select>
+                  
+                  {targetRegion !== 'Any' && (
+                    <label className="flex items-center gap-2 cursor-pointer ml-2 group">
+                      <div 
+                        className={cn(
+                          "w-5 h-5 rounded border flex items-center justify-center transition-all",
+                          isDeadset ? "bg-emerald-500 border-emerald-600" : "bg-white border-slate-300 group-hover:border-emerald-400"
+                        )}
+                        onClick={() => { sounds.playSuccess(); setIsDeadset(!isDeadset); }}
+                      >
+                        {isDeadset && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+                      </div>
+                      <span className="text-xs font-bold text-slate-600">Deadset on this region?</span>
+                    </label>
+                  )}
                 </div>
               </div>
             )}
