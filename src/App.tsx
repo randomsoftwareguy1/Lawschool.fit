@@ -1226,10 +1226,12 @@ export default function App() {
             <p className="text-slate-500 mt-2 text-lg">The final step in your journey: Compare your actual offers, calculate true costs, and find your best fit.</p>
           </div>
           
-          <div className="flex flex-wrap bg-slate-200/50 p-1.5 rounded-xl self-start md:self-auto gap-1 w-full md:w-auto">
+          <nav aria-label="Main navigation" className="flex flex-wrap bg-slate-200/50 p-1.5 rounded-xl self-start md:self-auto gap-1 w-full md:w-auto">
             <button
               onClick={() => { sounds.playClick(); setMainTab('dashboard'); }}
               onMouseEnter={() => sounds.playHover()}
+              aria-label="View Dashboard"
+              aria-current={mainTab === 'dashboard' ? 'page' : undefined}
               className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'dashboard' ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
               <TrendingUp className="w-4 h-4" /> <span className="hidden sm:inline">Dashboard</span><span className="sm:hidden">Dash</span>
@@ -1237,6 +1239,8 @@ export default function App() {
             <button
               onClick={() => { sounds.playClick(); setMainTab('versus'); }}
               onMouseEnter={() => sounds.playHover()}
+              aria-label="View Versus Mode"
+              aria-current={mainTab === 'versus' ? 'page' : undefined}
               className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'versus' ? "bg-white text-rose-600 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
               <Swords className="w-4 h-4" /> Versus
@@ -1244,6 +1248,8 @@ export default function App() {
             <button
               onClick={() => { sounds.playClick(); setMainTab('editor'); }}
               onMouseEnter={() => sounds.playHover()}
+              aria-label="Manage My Offers"
+              aria-current={mainTab === 'editor' ? 'page' : undefined}
               className={cn("flex-1 md:flex-none justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1 sm:gap-2", mainTab === 'editor' ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50")}
             >
               <Settings className="w-4 h-4" /> <span className="hidden sm:inline">My Offers</span><span className="sm:hidden">Offers</span>
@@ -1251,7 +1257,7 @@ export default function App() {
             <div className="w-full md:w-auto mt-1 md:mt-0">
               <ExportButton data={data} />
             </div>
-          </div>
+          </nav>
         </header>
 
         {mainTab === 'versus' && <VersusMode data={data} setMainTab={setMainTab} />}
